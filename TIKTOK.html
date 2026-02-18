@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TikTok Video Downloader</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .container {
+      background: #111;
+      padding: 30px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,.6);
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+
+    p {
+      font-size: 14px;
+      color: #aaa;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 12px;
+      background: linear-gradient(45deg, #ff0050, #ff7a00);
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .status {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    a.download-link {
+      display: block;
+      margin-top: 15px;
+      padding: 10px;
+      background: #00c853;
+      color: #000;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    footer {
+      margin-top: 20px;
+      font-size: 12px;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>TikTok Downloader</h1>
+    <p>Download TikTok videos without watermark</p>
+
+    <input type="text" id="tiktokUrl" placeholder="Paste TikTok video link here">
+
+    <button onclick="downloadVideo()">Download</button>
+
+    <div class="status" id="status"></div>
+    <div id="result"></div>
+
+    <footer>
+      © 2026 | Personal Use Only
+    </footer>
+  </div>
+
+  <script>
+    async function downloadVideo() {
+      const url = document.getElementById("tiktokUrl").value.trim();
+      const status = document.getElementById("status");
+      const result = document.getElementById("result");
+
+      result.innerHTML = "";
+
+      if (!url) {
+        status.innerText = "❌ Please paste a TikTok link.";
+        return;
+      }
+
+      status.innerText = "⏳ Processing video...";
+
+      try {
+        // Public API (may change over time)
+        const apiUrl = `https://tikwm.com/api/?url=${encodeURIComponent(url)}`;
+
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+
+        if (!data || data.code !== 0) {
+          status.innerText = "❌ Failed to fetch video.";
+          return;
+        }
+
+        const videoUrl = data.data.play;
+
+        status.innerText = "✅ Video ready!";
+
+        result.innerHTML = `
+          <a class="download-link" href="${videoUrl}" download target="_blank">
+            Download Video
+          </a>
+        `;
+      } catch (error) {
+        status.innerText = "❌ Error occurred. Try again later.";
+      }
+    }
+  </script>
+
+</body>
+</html>
